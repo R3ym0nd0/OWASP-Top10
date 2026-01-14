@@ -15,7 +15,7 @@ You can read more about IDOR and related labs here:
 
 ## What I observed during testing
 
-### Unauthenticated Access to Live Chat
+### 1. Unauthenticated Access to Live Chat
 
 During testing, the Live Chat feature was accessible without logging in.  
 Any messages sent were stored on the server as chat transcripts, which could later be viewed through the transcript functionality.
@@ -24,7 +24,7 @@ This behavior increases the risk of unauthorized access if proper access control
 
 <img width="1366" height="768" alt="1stStep" src="https://github.com/user-attachments/assets/928557d0-608c-4b05-9c0d-4fa74f1222a7" />
 
-### Downloadable Chat Transcripts
+### 2. Downloadable Chat Transcripts
 
 When using the `view transcript` feature, the application provided a downloadable text file containing the chat messages.
 The filename followed a numeric pattern, suggesting that transcripts may be stored and referenced in a sequential manner.
@@ -33,7 +33,7 @@ This behavior indicates that chat transcripts could potentially be accessed dire
 
 <img width="1366" height="768" alt="2ndStep" src="https://github.com/user-attachments/assets/8f5add3b-32bd-4c8d-9b7e-e6498d21e3f5" />
 
-### Chat Transcripts Stored as Files
+### 3. Chat Transcripts Stored as Files
 
 During testing using burpsuite, an HTTP GET request revealed a URL path related to chat transcript retrieval.
 The structure of this path suggests that transcripts are stored as individual files on the server.
@@ -41,3 +41,12 @@ The structure of this path suggests that transcripts are stored as individual fi
 If access to these files is not properly restricted, this design may allow unauthorized users to retrieve previously stored chat transcripts.
 
 <img width="1366" height="401" alt="3rd" src="https://github.com/user-attachments/assets/32dec337-2950-4168-a7a0-6921f5d4c5d9" />
+
+### 4. Insecure Direct Object Reference via Predictable File Names
+
+The chat transcripts are saved using predictable file names.
+The server does not properly check who owns each file.
+
+As a result, chat transcripts from other users can be accessed, confirming an IDOR vulnerability.
+
+<img width="1366" height="768" alt="4th" src="https://github.com/user-attachments/assets/baca3e66-d0d1-4d68-95f1-901152e30aa6" />
